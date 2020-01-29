@@ -6,5 +6,11 @@
 {% block content %}
   <div class="container">
     <h1>Login</h1>
+
+    <form method="post">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <button type="submit" class="btn btn-outline-success">Login</button>
+    </form>
   </div>
 {% endblock %}
