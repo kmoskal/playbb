@@ -7,7 +7,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Playbb</a>
+      <a class="navbar-brand" href="#">PlayBB</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -16,39 +16,25 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">link1 <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">link2</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                link3
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">drop1</a>
-                <a class="dropdown-item" href="#">drop2</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">drop3</a>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">link4</a>
+              <a class="nav-link" href="#">Tablica <span class="sr-only">(current)</span></a>
             </li>
           </ul>
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a href="#" class="nav-link">{{ user.username }}</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Logout</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user.username }}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'accounts:account-change-password' %}">Zmień Hasło</a>
+                <a class="dropdown-item" href="{% url 'accounts:account-logout' %}">Logout</a>
+              </div>
             </li>
           </ul>
         </div>
       {% else %}
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Login</a>
+            <a class="nav-link" href="{% url 'accounts:account-login' %}">Login</a>
           </li>
         </ul>
       {% endif %}
