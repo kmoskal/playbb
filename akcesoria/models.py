@@ -26,4 +26,4 @@ class Akcesoria(models.Model):
         return self.co
 
     def get_absolute_url(self):
-        return reverse("dashboard:dashboard_home")
+        return reverse("dashboard:dashboard-home")

@@ -128,5 +128,5 @@ STATICFILES_DIRS = [
 ]
 
 
-LOGIN_REDIRECT_URL = 'dashboard:dashboard_home'
+LOGIN_REDIRECT_URL = 'dashboard:dashboard-home'
 #LOGOUT_REDIRECT_URL = 'accounts:account-logout'
