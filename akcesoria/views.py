@@ -16,7 +16,6 @@ class AkcesoriaListView(LoginRequiredMixin, ListView):
     template_name = 'akcesoria/lista.html'
     this_month = datetime.datetime.now().month
     queryset = Akcesoria.objects.filter(data__month=this_month)
-    #queryset = Akcesoria.objects.all()
     model = Akcesoria
     context_object_name = 'akcesoria'
     ordering = ['-data']
