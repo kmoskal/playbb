@@ -1,0 +1,24 @@
+body {
+  background: lavender;
+}
+
+.card {
+  width: 450px;
+  background: #b2bec3;
+  box-shadow: 6px 6px 9px #636e72;
+}
+
+.frame {
+  border: 3px solid #636e72;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+
+.logout-text, .change-password-text {
+  letter-spacing: 3px;
+  font-size: 48px;
+  font-style: italic;
+  font-weight: 900;
+}
