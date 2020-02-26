@@ -13,8 +13,8 @@
         <hr>
         <p class="card-text">{{akcesoria.co}} za {{akcesoria.kwota}}zł do {{akcesoria.model}}</p>
         {% if akcesoria.kto == user %}
-          <a class="btn btn-primary" href="{% url 'akcesoria:akcesoria-update' akcesoria.id %}">Edytuj</a>
-          <a class="btn btn-danger" href="{% url 'akcesoria:akcesoria-delete' akcesoria.id %}">Usuń</a>
+          <a class="btn btn-primary" href="{% url 'akcesoria:akcesoria-update' akcesoria.id %}"><i class="fas fa-edit"></i> Edytuj</a>
+          <a class="btn btn-danger" href="{% url 'akcesoria:akcesoria-delete' akcesoria.id %}"><i class="fas fa-trash"></i> Usuń</a>
         {% endif %}
       </div>
     </div>

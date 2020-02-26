@@ -22,3 +22,11 @@ body {
   font-style: italic;
   font-weight: 900;
 }
+
+label {
+  font-size: 28px !important;
+}
+
+table tr td a {
+  color: #fff !important;
+}

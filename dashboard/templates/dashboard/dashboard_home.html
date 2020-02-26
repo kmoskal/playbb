@@ -16,12 +16,13 @@
         {% endfor %}
       </ul>
       <div class="card-header text-center">
-        <a role="button" class="btn btn-primary" href="{% url 'akcesoria:akcesoria-dodaj' %}">Dodaj</a>
+        <a role="button" class="btn btn-primary w-100" href="{% url 'akcesoria:akcesoria-dodaj' %}"><i class="fas fa-plus"></i></a>
       </div>
     </div>
 
     {% block akcesoria %}
     {% endblock %}
+
   </div>
 
 {% endblock %}
