@@ -18,7 +18,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         df = read_frame(queryset)
         kto_grp = df.groupby(['kto'])
         wartosc = kto_grp['kwota'].sum()
-        slownik = wartosc.to_dict()
+        slownik = wartosc.sort_values(ascending=False).to_dict()
         context['akcesoria'] = slownik
         context['suma'] = df['kwota'].sum()
         return context
