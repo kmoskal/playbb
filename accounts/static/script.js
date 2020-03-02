@@ -30,7 +30,7 @@ placeholderPassword.attr({
 // Change Password
 oldPassword.text("Stare Hasło");
 newPassword.text("Nowe Hasło");
-newPasswordConfirm.text("Potwierdzenie Nowego Hasło");
+newPasswordConfirm.text("Potwierdzenie Nowego Hasła");
 
 placeholderOldPassword.attr({
   placeholder: "Stare Hasło"
@@ -41,7 +41,7 @@ placeholderNewPassword.attr({
 });
 
 placeholderNewPasswordConfirm.attr({
-  placeholder: "Potwierdzenie Nowego Hasło"
+  placeholder: "Potwierdzenie Nowego Hasła"
 });
 
 listItem1.text("Twoje hasło nie może być zbyt podobne do innych danych osobowych.");
