@@ -2,24 +2,24 @@
 {% load bootstrap4 %}
 {% block content %}
 
-  <div class="card mt-3 w-50 mx-auto">
-    <div class="row no-gutters">
-      <div class="col-md-4">
-        <img src="https://xgsm.pl/data/include/img/news/1518504837.jpg" class="card-img" alt="...">
-      </div>
-      <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title">{{akcesoria.kto}}</h5>
-        <hr>
-        <p class="card-text">{{akcesoria.co}} za {{akcesoria.kwota}}zł do {{akcesoria.model}}</p>
-        {% if akcesoria.kto == user %}
-          <a class="btn btn-primary" href="{% url 'akcesoria:akcesoria-update' akcesoria.id %}"><i class="fas fa-edit"></i> Edytuj</a>
-          <a class="btn btn-danger" href="{% url 'akcesoria:akcesoria-delete' akcesoria.id %}"><i class="fas fa-trash"></i> Usuń</a>
-        {% endif %}
-      </div>
+<div class="card mt-3 w-50 mx-auto">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="https://xgsm.pl/data/include/img/news/1518504837.jpg" class="card-img" alt="...">
     </div>
+    <div class="col-md-8">
+    <div class="card-body">
+      <h5 class="card-title">{{akcesoria.kto}}</h5>
+      <hr>
+      <p class="card-text">{{akcesoria.co}} za {{akcesoria.kwota}}zł do {{akcesoria.model}}</p>
+      {% if akcesoria.kto == user %}
+        <a class="btn btn-primary" href="{% url 'akcesoria:akcesoria-update' akcesoria.id %}"><i class="fas fa-edit"></i> Edytuj</a>
+        <a class="btn btn-danger" href="{% url 'akcesoria:akcesoria-delete' akcesoria.id %}"><i class="fas fa-trash"></i> Usuń</a>
+      {% endif %}
     </div>
   </div>
+  </div>
+</div>
 
 
 

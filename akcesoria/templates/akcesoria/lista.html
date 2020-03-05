@@ -11,12 +11,12 @@
     </thead>
     <tbody>
       {% for akces in akcesoria %}
-        <tr>
-          <td><a href="{% url 'akcesoria:akcesoria-detail' pk=akces.id %}">{{ akces.kto }}</a></td>
-          <td><a href="{% url 'akcesoria:akcesoria-detail' pk=akces.id %}">{{ akces.co }}</a></td>
-          <td><a href="{% url 'akcesoria:akcesoria-detail' pk=akces.id %}">{{ akces.kwota }}</a></td>
-          <td><a href="{% url 'akcesoria:akcesoria-detail' pk=akces.id %}">{{ akces.model }}</a></td>
-        </tr>
+      <tr>
+        <td><a href="{% url 'akcesoria:akcesoria-detail' pk=akces.id %}">{{ akces.kto }}</a></td>
+        <td><a href="{% url 'akcesoria:akcesoria-detail' pk=akces.id %}">{{ akces.co }}</a></td>
+        <td><a href="{% url 'akcesoria:akcesoria-detail' pk=akces.id %}">{{ akces.kwota }}</a></td>
+        <td><a href="{% url 'akcesoria:akcesoria-detail' pk=akces.id %}">{{ akces.model }}</a></td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>

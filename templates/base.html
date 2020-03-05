@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="pl" dir="ltr">
   <head>
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    {% block styl %}{% endblock %}
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #232a30;">
@@ -28,6 +30,16 @@
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{% url 'akcesoria:akcesoria-lista' %}">Lista</a>
                 <a class="dropdown-item" href="{% url 'akcesoria:akcesoria-dodaj' %}">Dodaj</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-light" href="#" role="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Inwentaryzacja
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'inwentaryzacja:inwentaryzacja-lista' %}">Lista</a>
+                <a class="dropdown-item" href="{% url 'inwentaryzacja:inwentaryzacja-dodaj' %}">Dodaj</a>
+                <a class="dropdown-item" href="{% url 'inwentaryzacja:inwentaryzacja-ostatni' %}">Edytuj ostatni raport</a>
               </div>
             </li>
           </ul>

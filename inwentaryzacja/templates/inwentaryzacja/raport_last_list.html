@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <table class="table table-bordered table-striped table-dark mt-5 frame text-center">
+    <thead>
+      <tr>
+        <th scope="col">Sporządził</th>
+        <th scope="col">Data</th>
+        <th scope="col" colspan="2">Telefony</th>
+        <th scope="col" colspan="2">Startery Voice</th>
+        <th scope="col" colspan="2">Startery Data</th>
+        <th scope="col" colspan="2">Zdrapki</th>
+        <th scope="col" colspan="2">Doładowania</th>
+        <th scope="col" colspan="2">Gotówka</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2"><a  href="{% url 'inwentaryzacja:inwentaryzacja-update' pk=raporty.id %}">Edytuj</a></td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+      </tr>
+        <tr>
+          <td>{{ raporty.kto }}</td>
+          <td>{{ raporty.data_raportu|date:"d-m-Y" }}</td>
+          <td>{{ raporty.telefony_elza }}</td>
+          <td>{{ raporty.telefony_stan }}</td>
+          <td>{{ raporty.voice_elza }}</td>
+          <td>{{ raporty.voice_stan }}</td>
+          <td>{{ raporty.data_elza }}</td>
+          <td>{{ raporty.data_stan }}</td>
+          <td>{{ raporty.zdrapki_elza }}</td>
+          <td>{{ raporty.zdrapki_stan }}</td>
+          <td>{{ raporty.doladowania_elza }}</td>
+          <td>{{ raporty.doladowania_stan }}</td>
+          <td>{{ raporty.kasa_elza }}</td>
+          <td>{{ raporty.kasa_stan }}</td>
+        </tr>
+    </tbody>
+  </table>
+{% endblock %}

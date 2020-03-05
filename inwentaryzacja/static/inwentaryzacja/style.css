@@ -1,0 +1,28 @@
+table {
+  margin: 0 auto;
+  margin-top: 50px;
+  width: 90%;
+  border-right: 2px solid black;
+}
+
+th, td {
+  color: #fff;
+  text-align: center;
+  border: 1px solid black;
+}
+
+th, tbody tr:first-child td {
+  padding: 5px;
+}
+
+th {
+  background: #32363a;
+}
+
+td {
+  background: #454d55;
+}
+
+input {
+  width: 99%;
+}

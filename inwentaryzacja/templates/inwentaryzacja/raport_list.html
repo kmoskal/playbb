@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <table class="table table-bordered table-striped table-dark mt-5 frame text-center">
+    <thead>
+      <tr>
+        <th scope="col">Sporządził</th>
+        <th scope="col">Data</th>
+        <th scope="col" colspan="2">Telefony</th>
+        <th scope="col" colspan="2">Startery Voice</th>
+        <th scope="col" colspan="2">Startery Data</th>
+        <th scope="col" colspan="2">Zdrapki</th>
+        <th scope="col" colspan="2">Doładowania</th>
+        <th scope="col" colspan="2">Gotówka</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2"></td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+      </tr>
+      {% for raport in raporty %}
+        <tr>
+          <td>{{ raport.kto }}</td>
+          <td>{{ raport.data_raportu|date:"d-m-Y" }}</td>
+          <td>{{ raport.telefony_elza }}</td>
+          <td>{{ raport.telefony_stan }}</td>
+          <td>{{ raport.voice_elza }}</td>
+          <td>{{ raport.voice_stan }}</td>
+          <td>{{ raport.data_elza }}</td>
+          <td>{{ raport.data_stan }}</td>
+          <td>{{ raport.zdrapki_elza }}</td>
+          <td>{{ raport.zdrapki_stan }}</td>
+          <td>{{ raport.doladowania_elza }}</td>
+          <td>{{ raport.doladowania_stan }}</td>
+          <td>{{ raport.kasa_elza }}</td>
+          <td>{{ raport.kasa_stan }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
