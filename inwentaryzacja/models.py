@@ -22,7 +22,7 @@ class Raport(models.Model):
 
 
     def __str__(self):
-        return str(self.kasa_elza)
+        return self.kto
 
     def get_absolute_url(self):
         return reverse("inwentaryzacja:inwentaryzacja-lista")
