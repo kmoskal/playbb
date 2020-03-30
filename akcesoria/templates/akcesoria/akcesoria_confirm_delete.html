@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
+
+{% block title %} Akcesoria {% endblock %}
+{% block styl %}{% endblock %}
 {% block content %}
 
-<div class="card mt-3 w-50 mx-auto">
+<div class="card mt-5 w-25 mx-auto frame">
   <div class="row no-gutters">
-    <div class="col-md-4">
-      <img src="https://xgsm.pl/data/include/img/news/1518504837.jpg" class="card-img" alt="...">
-    </div>
-    <div class="col-md-8">
+    <div class="col-md-12">
     <div class="card-body">
       <h5 class="card-title">{{akcesoria.kto}}</h5>
       <hr>
-      <p class="card-text">{{akcesoria.co}} za {{akcesoria.kwota}}zł do {{akcesoria.model}}</p>
+      <p class="card-text">{{akcesoria.co}} za {{akcesoria.kwota}} zł.</p>
       <form  method="post">
         {% csrf_token %}
-          <a class="btn btn-secondary" href="{% url 'akcesoria:akcesoria-detail' akcesoria.id %}">Anuluj</a>
-          <button type="submit" name="button" class="btn btn-danger">Tak</button>
+          <a class="btn btn-outline-warning" href="{% url 'akcesoria:akcesoria-lista' %}">Anuluj</a>
+          <button type="submit" name="button" class="btn btn-danger">Usuń</button>
       </form>
     </div>
   </div>

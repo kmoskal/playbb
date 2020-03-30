@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{% block styl %}
-  <link rel="stylesheet" href="{% static 'inwentaryzacja/style.css' %}">
-{% endblock %}
+{% block title %} Inwentaryzacja {% endblock %}
+{% block styl %} {% endblock styl%}
 {% block content %}
-    <table cellspacing="0">
+    <table cellspacing="0" class="table table-striped table-dark frame text-center">
       <thead>
         <tr>
           <th colspan="2">Telefony</th>
@@ -40,10 +38,63 @@
             </tr>
             <tr>
               <td colspan="12">
-                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Zapisz</button>
+                <button type="submit" class="btn btn-outline-light w-100"><i class="fas fa-save"></i> Zapisz</button>
               </td>
             </tr>
         </form>
+      </tbody>
+    </table>
+
+    <table class="table table-striped table-dark mt-5 frame text-center">
+      <thead>
+        <tr>
+          <th scope="col">Sporządził</th>
+          <th scope="col">Data</th>
+          <th scope="col" colspan="2">Telefony</th>
+          <th scope="col" colspan="2">Startery Voice</th>
+          <th scope="col" colspan="2">Startery Data</th>
+          <th scope="col" colspan="2">Zdrapki</th>
+          <th scope="col" colspan="2">Doładowania</th>
+          <th scope="col" colspan="2">Gotówka</th>
+          <th scope="col">Podgląd</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="2"></td>
+          <td>Elza</td>
+          <td>Stan</td>
+          <td>Elza</td>
+          <td>Stan</td>
+          <td>Elza</td>
+          <td>Stan</td>
+          <td>Elza</td>
+          <td>Stan</td>
+          <td>Elza</td>
+          <td>Stan</td>
+          <td>Elza</td>
+          <td>Stan</td>
+          <td></td>
+        </tr>
+        {% for raport in raporty %}
+          <tr>
+            <td>{{ raport.kto }}</td>
+            <td>{{ raport.data_raportu|date:"d-m-Y" }}</td>
+            <td>{{ raport.telefony_elza }}</td>
+            <td>{{ raport.telefony_stan }}</td>
+            <td>{{ raport.voice_elza }}</td>
+            <td>{{ raport.voice_stan }}</td>
+            <td>{{ raport.data_elza }}</td>
+            <td>{{ raport.data_stan }}</td>
+            <td>{{ raport.zdrapki_elza }}</td>
+            <td>{{ raport.zdrapki_stan }}</td>
+            <td>{{ raport.doladowania_elza }}</td>
+            <td>{{ raport.doladowania_stan }}</td>
+            <td>{{ raport.kasa_elza }}</td>
+            <td>{{ raport.kasa_stan }}</td>
+            <td><a href="{% url 'inwentaryzacja:inwentaryzacja-detail' pk=raport.id %}"><i class="fas fa-info-circle"></i></a></td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
 {% endblock %}

@@ -1,16 +1,61 @@
 {% extends 'base.html' %}
-{% load bootstrap4 %}
+{% load static %}
+{% block title %} Akcesoria {% endblock %}
+{% block styl %}{% endblock styl%}
 {% block content %}
-  <div class="container mt-5">
-    <div class="card text-center mx-auto">
-      <div class="p-5">
+    <table cellspacing="0" class="table table-bordered table-striped table-dark mt-5 frame text-center">
+      <thead>
+        <tr>
+          <th>Rodzaj</th>
+          <th>Kwota</th>
+          <th>Model</th>
+        </tr>
+      </thead>
+      <tbody>
         <form method="post">
-          {% csrf_token %}
-          {% bootstrap_form form layout='inline' %}
-
-          <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Zapisz</button>
+        {% csrf_token %}
+            <tr>
+                {% for element in form %}
+                  <td>{{ element }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+              <td colspan="12">
+                <button type="submit" class="btn btn-outline-light w-100"><i class="fas fa-save"></i> Zapisz</button>
+              </td>
+            </tr>
         </form>
-      </div>
-    </div>
-  </div>
+      </tbody>
+    </table>
+
+    <table cellspacing="0" class="table table-bordered table-striped table-dark mt-5 frame text-center">
+      <thead>
+        <tr>
+          <th>Kto</th>
+          <th>Rodzaj</th>
+          <th>Kwota</th>
+          <th>Model</th>
+          <th>Edytuj</th>
+          <th>Usuń</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for akces in akcesoria %}
+          <tr>
+            <td>{{ akces.kto }}</td>
+            <td>{{ akces.co }}</td>
+            <td>{{ akces.kwota }}</td>
+            <td>{{ akces.model }}</td>
+
+            {% if akces.kto == user %}
+                <td><a href="{% url 'akcesoria:akcesoria-update' akces.id %}"><i class="fas fa-edit"></i></a></td>
+                <td><a href="{% url 'akcesoria:akcesoria-delete' akces.id %}"><i class="far fa-trash-alt"></i></a></td>
+            {% else %}
+                <td colspan="2"></td>
+            {% endif %}
+
+          </tr>
+        {% endfor %}
+      </tbody>
+
 {% endblock %}

@@ -13,12 +13,10 @@ from .models import Akcesoria
 
 class AkcesoriaListView(LoginRequiredMixin, ListView):
     login_url = 'accounts:account-login'
-    template_name = 'akcesoria/lista.html'
     this_month = datetime.datetime.now().month
-    queryset = Akcesoria.objects.filter(data__month=this_month)
+    queryset = Akcesoria.objects.filter(data__month=this_month).order_by('-data', '-pk')
     model = Akcesoria
     context_object_name = 'akcesoria'
-    ordering = ['-data']
 
 class AkcesoriaCreateView(LoginRequiredMixin, CreateView):
     login_url = 'accounts:account-login'
@@ -29,8 +27,15 @@ class AkcesoriaCreateView(LoginRequiredMixin, CreateView):
         form.instance.kto = self.request.user
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        this_month = datetime.datetime.now().month
+        context["akcesoria"] = self.model.objects.filter(data__month=this_month).order_by('-data', '-pk')
+        return context
+
 class AkcesoriaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     login_url = 'accounts:account-login'
+    template_name = 'akcesoria/akcesoria_update.html'
     fields = ('co', 'kwota', 'model')
     model = Akcesoria
 

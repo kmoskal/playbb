@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% block title %} Inwentaryzacja {% endblock %}
 {% block content %}
   <table class="table table-bordered table-striped table-dark mt-5 frame text-center">
     <thead>
@@ -12,6 +12,7 @@
         <th scope="col" colspan="2">Zdrapki</th>
         <th scope="col" colspan="2">Doładowania</th>
         <th scope="col" colspan="2">Gotówka</th>
+        <th scope="col">Podgląd</th>
       </tr>
     </thead>
     <tbody>
@@ -29,6 +30,7 @@
         <td>Stan</td>
         <td>Elza</td>
         <td>Stan</td>
+        <td></td>
       </tr>
       {% for raport in raporty %}
         <tr>
@@ -46,6 +48,7 @@
           <td>{{ raport.doladowania_stan }}</td>
           <td>{{ raport.kasa_elza }}</td>
           <td>{{ raport.kasa_stan }}</td>
+                      <td><a href="{% url 'inwentaryzacja:inwentaryzacja-detail' pk=raport.id %}"><i class="fas fa-info-circle"></i></a></td>
         </tr>
       {% endfor %}
     </tbody>

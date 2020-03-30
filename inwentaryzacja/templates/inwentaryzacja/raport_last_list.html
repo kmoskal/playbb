@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% block title %} Inwentaryzacja {% endblock %}
 {% block content %}
   <table class="table table-bordered table-striped table-dark mt-5 frame text-center">
     <thead>
@@ -16,7 +16,13 @@
     </thead>
     <tbody>
       <tr>
-        <td colspan="2"><a  href="{% url 'inwentaryzacja:inwentaryzacja-update' pk=raporty.id %}">Edytuj</a></td>
+        <td colspan="2">
+          {% if raporty.id is not None %}
+          <a  href="{% url 'inwentaryzacja:inwentaryzacja-update' pk=raporty.id %}">
+            Edytuj
+          </a>
+          {% endif %}
+        </td>
         <td>Elza</td>
         <td>Stan</td>
         <td>Elza</td>
@@ -45,6 +51,7 @@
           <td>{{ raporty.doladowania_stan }}</td>
           <td>{{ raporty.kasa_elza }}</td>
           <td>{{ raporty.kasa_stan }}</td>
+          <td>{{ raporty.id }}</td>
         </tr>
     </tbody>
   </table>

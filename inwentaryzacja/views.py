@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import Http404
 from django.views.generic import (
         TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
     )
@@ -25,8 +26,16 @@ class RaportCreateView(LoginRequiredMixin, CreateView):
         form.instance.kto = self.request.user
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        this_month = datetime.datetime.now().month
+        context["raporty"] = self.model.objects.filter(data_raportu__month=this_month).order_by('-data_raportu', '-pk')
+        return context
+
+
 class RaportUpdateView(LoginRequiredMixin, UpdateView):
     login_url = 'accounts:account-login'
+    template_name = 'inwentaryzacja/raport_update.html'
     model = Raport
     fields = (
         'telefony_elza', 'telefony_stan', 'voice_elza', 'voice_stan',
@@ -41,8 +50,6 @@ class RaportUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse("inwentaryzacja:inwentaryzacja-lista")
 
-
-
 class RaportListView(LoginRequiredMixin, ListView):
     login_url ='accounts:account-login'
     this_month = datetime.datetime.now().month
@@ -50,7 +57,7 @@ class RaportListView(LoginRequiredMixin, ListView):
     queryset = Raport.objects.filter(data_raportu__month=this_month)
     model = Raport
     context_object_name = 'raporty'
-    ordering = ['-data_raportu']
+    ordering = ['-data_raportu', '-pk']
 
     # def get_context_data(self, **kwargs):
     #     context = super(RaportListView, self).get_context_data(**kwargs)
@@ -65,18 +72,23 @@ class RaportListView(LoginRequiredMixin, ListView):
 class RaportLastListView(LoginRequiredMixin, ListView):
     login_url = 'accounts:account-login'
     template_name = 'inwentaryzacja/raport_last_list.html'
-    queryset = Raport.objects.latest('data_raportu')
+    #this_month = datetime.datetime.now().month
+    #queryset = Raport.objects.filter(data_raportu__month=this_month).last()
     model = Raport
     context_object_name = 'raporty'
+    queryset = Raport.objects.all().last()
+
+
+
 
 
 
 class RaportDetailView(LoginRequiredMixin, DetailView):
-    login_url='accounts:acount-login'
+    login_url='accounts:account-login'
     model = Raport
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        dzis = datetime.datetime.now().today()
-        context['dzis'] = dzis
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     dzis = datetime.datetime.now().today()
+    #     context['dzis'] = dzis
+    #     return context

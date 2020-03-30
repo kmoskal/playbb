@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %} Akcesoria {% endblock %}
+
+{% block content %}
+  <table class="table table-striped table-dark mt-5 frame">
+    <thead>
+      <tr>
+        <th>Kto</th>
+        <th>Co</th>
+        <th>Kwota</th>
+        <th>Model</th>
+        <th>Edytuj</th>
+        <th>Usuń</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for akces in akcesoria %}
+      <tr>
+        <td>{{ akces.kto }}</td>
+        <td>{{ akces.co }}</td>
+        <td>{{ akces.kwota }}</td>
+        <td>{{ akces.model }}</td>
+
+        {% if akces.kto == user %}
+            <td><a href="{% url 'akcesoria:akcesoria-update' akces.id %}"><i class="fas fa-edit"></i></a></td>
+            <td><a href="{% url 'akcesoria:akcesoria-delete' akces.id %}"><i class="far fa-trash-alt"></i></a></td>
+        {% else %}
+            <td colspan="2"></td>
+        {% endif %}
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
