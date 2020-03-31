@@ -6,7 +6,8 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 import datetime
-
+import pandas as pd
+from django_pandas.io import read_frame
 from .models import Akcesoria
 
 
@@ -71,3 +72,28 @@ class AkcesoriaDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse("akcesoria:akcesoria-lista")
+
+
+class AkcesoriaMonthView(LoginRequiredMixin, TemplateView):
+    login_url = 'accounts:account-login'
+    template_name = 'akcesoria/akcesoria_month.html'
+
+
+
+    def get_context_data(self, **kwargs):
+        year = self.kwargs.get('year')
+        month = self.kwargs.get('month')
+        context = super(AkcesoriaMonthView, self).get_context_data(**kwargs)
+        queryset = Akcesoria.objects.filter(data__month=month, data__year=year)
+        df = read_frame(queryset)
+        kto_grp = df.groupby(['kto'])
+        wartosc = kto_grp['kwota'].sum()
+        slownik = wartosc.sort_values(ascending=False).to_dict()
+        context['akcesoria'] = slownik
+        context['suma'] = df['kwota'].sum()
+        data = {
+            "rok": year,
+            "miesiac": month,
+        }
+        context['data'] = data
+        return context

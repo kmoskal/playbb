@@ -97,3 +97,7 @@ input::-webkit-outer-spin-button {
 .login-error {
   color: red;
 }
+
+.akcesoria-search:hover {
+  color: black !important;
+}
