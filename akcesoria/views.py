@@ -5,10 +5,12 @@ from django.views.generic import (
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core import serializers
 import datetime
 import pandas as pd
 from django_pandas.io import read_frame
 from .models import Akcesoria
+import json
 
 
 
@@ -90,6 +92,7 @@ class AkcesoriaMonthView(LoginRequiredMixin, TemplateView):
         wartosc = kto_grp['kwota'].sum()
         slownik = wartosc.sort_values(ascending=False).to_dict()
         context['akcesoria'] = slownik
+        context['akcesoria_json'] = wartosc.sort_values(ascending=False).to_json()
         context['suma'] = df['kwota'].sum()
         data = {
             "rok": year,
