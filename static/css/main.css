@@ -101,3 +101,7 @@ input::-webkit-outer-spin-button {
 .akcesoria-search:hover {
   color: black !important;
 }
+
+.brak {
+  color: red !important;
+}
