@@ -86,9 +86,36 @@ class RaportLastListView(LoginRequiredMixin, ListView):
 class RaportDetailView(LoginRequiredMixin, DetailView):
     login_url='accounts:account-login'
     model = Raport
-
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     dzis = datetime.datetime.now().today()
     #     context['dzis'] = dzis
     #     return context
+    #<td><a href="{% url 'inwentaryzacja:inwentaryzacja-update' pk=raport.id %}"><i class="fas fa-edit"></i></a></td>
+
+    def get_context_data(self, **kwargs):
+        context = super(RaportDetailView, self).get_context_data(**kwargs)
+        context['raport'] = Raport.objects.get(pk=self.kwargs['pk'])
+
+
+        def check_difference(x, y):
+            if x and y:
+                if y-x > 0:
+                    return y-x
+                elif y-x < 0:
+                    return y-x
+                else:
+                    return "OK"
+            else:
+                return "Brak danych"
+
+        qs = Raport.objects.get(pk=self.kwargs['pk'])
+        context['telefony'] = check_difference(qs.telefony_elza, qs.telefony_stan)
+        context['voice'] = check_difference(qs.voice_elza, qs.voice_stan)
+        context['starter_data'] = check_difference(qs.data_elza, qs.data_stan)
+        context['zdrapki'] = check_difference(qs.zdrapki_elza, qs.zdrapki_stan)
+        context['doladowania'] = check_difference(qs.doladowania_elza, qs.doladowania_stan)
+        context['gotowka'] = check_difference(qs.kasa_elza, qs.kasa_stan)
+        context['data'] = qs.data_raportu
+
+        return context

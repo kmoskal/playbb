@@ -51,4 +51,32 @@
         </tr>
     </tbody>
   </table>
+
+  <div class="row mt-4">
+
+    <div class="col-4">
+
+    </div>
+
+
+    <div class="col-4">
+      <div class="card mt-3 p-0 frame">
+        <div class="card-header">
+          <span style="font-size: 18px; font-weight: 800">Inwentaryzacja:</span><span style="font-size: 18px; font-weight: 800" class="float-right">{{ data|date:"d-M-Y" }}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><b>Telefony:</b> <span {% if telefony == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ telefony }}</span></li>
+          <li class="list-group-item"><b>Startery Voice:</b> <span {% if voice == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ voice }}</span></li>
+          <li class="list-group-item"><b>Startery Data:</b> <span {% if starter_data == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ starter_data }}</span></li>
+          <li class="list-group-item"><b>Zdrapki:</b> <span {% if zdrapki == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ zdrapki }}</span></>
+          <li class="list-group-item"><b>Doładowania:</b> <span {% if doladowania == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ doladowania }}</span></>
+          <li class="list-group-item"><b>Gotówka:</b> <span {% if gotowka == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{% if gotowka == 'OK' %} {{ gotowka }} {% else %} {{ gotowka}} zł {% endif %}</span></li>
+        </ul>
+        <div class="card-footer">
+
+        </div>
+      </div>
+    </div>
+
+  </div>
 {% endblock %}
