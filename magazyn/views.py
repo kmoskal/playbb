@@ -32,7 +32,7 @@ def simple_upload(request):
                 df = df.append(df_temp)
 
             # dodaje nazwy kolumn i resetuje index
-            df.columns = ['symbol', 'nazwa', 'imei', 'data', 'ilosc', 'jm']
+            df.columns = ['symbol', 'nazwa', 'imei', 'ilosc']
             df.reset_index(drop=True, inplace=True)
 
             # zapisujemy plik i to koniec programu dla windows
@@ -82,7 +82,8 @@ def simple_upload(request):
             df_prepaid_voice.drop(df_prepaid_voice[df_prepaid_voice['symbol'] == 'ST-P4-DALAS-MNP-MS'].index, inplace=True)
             df_prepaid_voice.drop(df_prepaid_voice[df_prepaid_voice.symbol.str.startswith('ST-P4-INT')].index, inplace=True)
             df_prepaid_net = df_prepaid_net.append(df[df.symbol.str.startswith('ST-P4-INT')])
-
+            print(df_prepaid_voice)
+            print(df_prepaid_net)
 
             #print("Ilość prepaid: ", df_prepaid['ilosc'].astype(int).sum())
 
