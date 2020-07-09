@@ -21,8 +21,10 @@ def simple_upload(request):
             # przerabiamy plik pdf
         try:
             t_start = process_time()
+            print(t_start)
             tables = camelot.read_pdf('media/'+myfile.name, pages='1-end')
             t_stop = process_time()
+            print(t_stop)
             df = pd.DataFrame()
             print("przekonwertowano plik w ciągu ", t_stop-t_start, " sekund.")
             for i in range(tables.n):
