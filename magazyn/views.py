@@ -26,7 +26,7 @@ class WyszukaneAkcesoriaView(LoginRequiredMixin, ListView):
     context_object_name = 'akcesoria'
 
     def get_queryset(self):
-        query = self.request.GET.get('q').lower()
+        query = self.request.GET.get('q').lower().replace(' ', '')
         object_list = StanAkcesoria.objects.filter(searchstring__icontains=query)
 
         return object_list
