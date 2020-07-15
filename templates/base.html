@@ -46,12 +46,23 @@
                 <a class="dropdown-item" href="{% url 'inwentaryzacja:inwentaryzacja-dodaj' %}">Dodaj</a>
               </div>
             </li>
-            <li class="nav-item text-light">
-              <a class="nav-link text-light" href="{% url 'magazyn:magazyn-home' %}">Magazyn</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-light" href="#" role="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Magazyn
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'magazyn:magazyn-home' %}">Wczytaj stany magazynowe</a>
+                <a class="dropdown-item" href="{% url 'magazyn:lista-akcesorii' %}">Lista akcesorii</a>
+              </div>
             </li>
           </ul>
 
           <ul class="navbar-nav ml-auto">
+          <form class="form-inline my-2 my-lg-0" action="{% url 'magazyn:wyszukane-akcesoria' %}"" method="get">
+            <input class="form-control mr-sm-2" name="q" type="search" placeholder="Szukaj" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Szukaj</button>
+          </form>
+
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle text-light mr-5" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}

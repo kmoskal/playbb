@@ -95,11 +95,15 @@ input::-webkit-outer-spin-button {
 }
 
 .login-error {
-  color: red;
+  color: darkorange;
 }
 
 .akcesoria-search:hover {
   color: black !important;
+}
+
+button {
+  color: white;
 }
 
 .brak {

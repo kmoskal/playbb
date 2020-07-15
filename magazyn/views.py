@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from sqlalchemy import create_engine
@@ -9,6 +11,26 @@ from .models import StanAkcesoria
 from inwentaryzacja.models import Raport
 
 # Create your views here.
+
+class ListaAkcesoriView(LoginRequiredMixin, ListView):
+    login_url = 'accounts:account-login'
+    queryset = StanAkcesoria.objects.all()
+    template_name = "magazyn/lista-akcesorii.html"
+    model = StanAkcesoria
+    context_object_name = 'akcesoria'
+
+class WyszukaneAkcesoriaView(LoginRequiredMixin, ListView):
+    login_url = 'accounts:account-login'
+    template_name = "magazyn/lista-akcesorii.html"
+    model = StanAkcesoria
+    context_object_name = 'akcesoria'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q').lower()
+        object_list = StanAkcesoria.objects.filter(searchstring__icontains=query)
+
+        return object_list
+
 
 
 def simple_upload(request):
@@ -22,7 +44,7 @@ def simple_upload(request):
         try:
             t_start = process_time()
             print(t_start)
-            tables = camelot.read_pdf('media/'+myfile.name, pages='1-end')
+            tables = camelot.read_pdf(settings.MEDIA_ROOT+filename, pages='1-end')
             t_stop = process_time()
             print(t_stop)
             df = pd.DataFrame()
@@ -36,6 +58,7 @@ def simple_upload(request):
             # dodaje nazwy kolumn i resetuje index
             df.columns = ['symbol', 'nazwa', 'imei', 'ilosc']
             df.reset_index(drop=True, inplace=True)
+
 
             # zapisujemy plik i to koniec programu dla windows
             #df.to_csv('stan.csv')
@@ -69,9 +92,13 @@ def simple_upload(request):
             engine = create_engine(db_url, echo=False)
 
             df_akc.reset_index(drop=True, inplace=True)
+            df_akc['id'] = df_akc.index
+            df_akc.set_index('id')
 
             df_akc['nazwa'] = df_akc['nazwa'].map(lambda x: x.replace('\n', ''))
-
+            # usuwamy spacje i duze litery aby przygotowac string do wyszukiwania
+            df_akc['searchstring'] = df_akc['nazwa'].map(lambda x: x.lower())
+            df_akc['searchstring'] = df_akc['searchstring'].map(lambda x: x.replace(' ', ''))
 
             df_akc.to_sql(StanAkcesoria._meta.db_table, con=engine, if_exists='replace')
 
