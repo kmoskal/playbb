@@ -29,7 +29,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         # context do inwentaryzacji
         def check_difference(x, y):
-            if x and y:
+            if x is not None and y is not None:
                 if y-x > 0:
                     return y-x
                 elif y-x < 0:
