@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from sqlalchemy import create_engine
@@ -32,7 +33,7 @@ class WyszukaneAkcesoriaView(LoginRequiredMixin, ListView):
         return object_list
 
 
-
+@login_required
 def simple_upload(request):
     if request.method == "POST" and request.FILES['myfile']:
         myfile = request.FILES['myfile']
