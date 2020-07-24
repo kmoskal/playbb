@@ -78,7 +78,7 @@ input {
   width: 99.99%;
   border-color: #515865 !important;
   background: #616875 !important;
-  color: white;
+  color: white !important;
   text-align: center;
 }
 
@@ -93,6 +93,28 @@ input::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+
+textarea:focus,
+textarea.form-control:focus,
+input.form-control:focus,
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+[type=text].form-control:focus,
+[type=password].form-control:focus,
+[type=email].form-control:focus,
+[type=tel].form-control:focus,
+[type=search].form-control:focus,
+[contenteditable].form-control:focus {
+  box-shadow: none;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
 
 .login-error {
   color: darkorange;
