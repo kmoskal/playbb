@@ -12,8 +12,12 @@
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <tr>
-            <td colspan="4"><input type="file" name="myfile"></td>
-            <td colspan="4"><button type="submit" name="">Upload</button></td>
+
+              <td colspan="4">
+                <input type="file" name="myfile">
+              </td>
+
+            <td colspan="4"><button class="" type="submit" name="">Upload</button></td>
           </tr>
 
 

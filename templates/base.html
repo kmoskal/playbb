@@ -42,8 +42,9 @@
                 Inwentaryzacja
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{% url 'inwentaryzacja:inwentaryzacja-lista' %}">Lista</a>
+                <a class="dropdown-item" href="{% url 'magazyn:magazyn-home' %}">Wczytaj raport z pliku</a>
                 <a class="dropdown-item" href="{% url 'inwentaryzacja:inwentaryzacja-dodaj' %}">Dodaj</a>
+                <a class="dropdown-item" href="{% url 'inwentaryzacja:inwentaryzacja-lista' %}">Lista</a>
               </div>
             </li>
             <li class="nav-item dropdown">
@@ -51,8 +52,17 @@
                 Magazyn
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{% url 'magazyn:magazyn-home' %}">Wczytaj stany magazynowe</a>
+                <a class="dropdown-item" href="{% url 'magazyn:wczytaj-stany' %}">Wczytaj stany magazynowe</a>
                 <a class="dropdown-item" href="{% url 'magazyn:lista-akcesorii' %}">Lista akcesorii</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-light disabled" href="#" role="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Braki
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'braki:braki-home' %}">Lista braków</a>
+                <a class="dropdown-item" href="{% url 'braki:braki-wczytaj-plik' %}">Wczytaj braki</a>
               </div>
             </li>
           </ul>
@@ -60,7 +70,7 @@
           <ul class="navbar-nav ml-auto">
           <form class="form-inline my-2 my-lg-0" action="{% url 'magazyn:wyszukane-akcesoria' %}"" method="get">
             <input class="form-control mr-sm-2" name="q" type="search" placeholder="Szukaj" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Szukaj</button>
+            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Szukaj</button>
           </form>
 
             <li class="nav-item dropdown">

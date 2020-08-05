@@ -7,11 +7,8 @@ from django.core.files.storage import FileSystemStorage
 from sqlalchemy import create_engine
 import camelot
 import pandas as pd
-from time import process_time
 from .models import StanAkcesoria
 from inwentaryzacja.models import Raport
-
-# Create your views here.
 
 class ListaAkcesoriView(LoginRequiredMixin, ListView):
     login_url = 'accounts:account-login'
@@ -33,125 +30,135 @@ class WyszukaneAkcesoriaView(LoginRequiredMixin, ListView):
         return object_list
 
 
+# file processing
+def file_processing(filename):
+    try:
+        tables = camelot.read_pdf(settings.MEDIA_ROOT+filename, pages='1-end')
+        df = pd.DataFrame()
+        for i in range(tables.n):
+            df_temp = tables[i].df
+            df_temp.drop(df_temp.index[0], inplace=True)
+            df = df.append(df_temp)
+
+        # dodaje nazwy kolumn i resetuje index
+        df.columns = ['symbol', 'nazwa', 'imei', 'ilosc']
+        df.reset_index(drop=True, inplace=True)
+
+        # tworze tabele z samymi akcesoriami i wszystkie dodaje do tabeli
+        df_akcesoria = pd.DataFrame()
+        df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('GSM')])
+        df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('Ory')])
+        df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('Akc')])
+        df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('KAT')])
+        df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('OEM')])
+        df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('AKK')])
+
+        # tworze tabele prepaid i dodaje wszystko do tabeli
+        # usuwam startery mnp
+        df_prepaid_voice = pd.DataFrame()
+        df_prepaid_net = pd.DataFrame()
+        df_prepaid_voice = df_prepaid_voice.append(df[df.symbol.str.startswith('ST')])
+        df_prepaid_voice.drop(df_prepaid_voice[df_prepaid_voice['symbol'] == 'ST-P4-DALAS-MNP-MS'].index, inplace=True)
+        df_prepaid_voice.drop(df_prepaid_voice[df_prepaid_voice.symbol.str.startswith('ST-P4-INT')].index, inplace=True)
+        df_prepaid_net = df_prepaid_net.append(df[df.symbol.str.startswith('ST-P4-INT')])
+
+        # tworze tabele z urzadzeniami i wszystkie dodaje do tabeli
+        df_urzadzenia = pd.DataFrame()
+        df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('TE')])
+        df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('UZ')])
+        df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('ZE')])
+        df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('GA')])
+
+        # tworze tabele ze zdrapkami
+        df_zdrapki = pd.DataFrame()
+        df_zdrapki = df_zdrapki.append(df[df.symbol.str.startswith('VO')])
+
+        # przygotowuje do zapisu do bazy
+        user = settings.DATABASES['default']['USER']
+        password = settings.DATABASES['default']['PASSWORD']
+        db_name = settings.DATABASES['default']['NAME']
+
+        db_url = 'postgresql://{user}:{password}@localhost:5432/{db_name}'.format(
+            user=user,
+            password=password,
+            db_name=db_name,
+        )
+
+        engine = create_engine(db_url, echo=False)
+
+
+        #print('przygotowuje dane statu magazynowego')
+        df_to_sql = pd.DataFrame()
+        df_to_sql = df_to_sql.append(df_akcesoria)
+        df_to_sql = df_to_sql.append(df_urzadzenia)
+        df_to_sql.drop(columns='imei', inplace=True)
+        df_to_sql.dropna(inplace=True)
+        df_to_sql['ilosc'] = df_to_sql['ilosc'].astype(str).astype(int)
+        df_to_sql['ilosc'] = df_to_sql.groupby(['symbol'])['ilosc'].transform('sum')
+        df_to_sql = df_to_sql.drop_duplicates(subset='symbol', keep='first')
+        df_to_sql.loc[:, ('nazwa')].map(lambda x: x.replace('\n', ''))
+        df_to_sql['searchstring'] = df_to_sql['nazwa'].map(lambda x: x.lower())
+        df_to_sql['searchstring'] = df_to_sql['searchstring'].map(lambda x: x.replace(' ', ''))
+        df_to_sql.reset_index(drop=True, inplace=True)
+        df_to_sql.index.rename('id', inplace=True)
+
+        #zapisuje do bazy danych
+        df_to_sql.to_sql(StanAkcesoria._meta.db_table, con=engine, if_exists='replace')
+
+        raport = {
+            "telefony_elza": df_urzadzenia['ilosc'].astype(int).sum(),
+            "voice_elza": df_prepaid_voice['ilosc'].astype(int).sum(),
+            "data_elza": df_prepaid_net['ilosc'].astype(int).sum(),
+            "zdrapki_elza": df_zdrapki['ilosc'].astype(int).sum()
+        }
+
+        return raport
+
+    except:
+        return None
+
 @login_required
-def simple_upload(request):
+def upload_file_to_raport(request):
+    template_name = 'upload_file.html'
+
     if request.method == "POST" and request.FILES['myfile']:
         myfile = request.FILES['myfile']
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
 
-
-            # przerabiamy plik pdf
-        try:
-            t_start = process_time()
-            print(t_start)
-            tables = camelot.read_pdf(settings.MEDIA_ROOT+filename, pages='1-end')
-            t_stop = process_time()
-            print(t_stop)
-            df = pd.DataFrame()
-            print("przekonwertowano plik w ciągu ", t_stop-t_start, " sekund.")
-            for i in range(tables.n):
-                df_temp = tables[i].df
-                df_temp.drop(df_temp.index[0], inplace=True)
-
-                df = df.append(df_temp)
-
-            # dodaje nazwy kolumn i resetuje index
-            df.columns = ['symbol', 'nazwa', 'imei', 'ilosc']
-            df.reset_index(drop=True, inplace=True)
-
-
-            # zapisujemy plik i to koniec programu dla windows
-            #df.to_csv('stan.csv')
-
-
-
-            # Obróbka pliku to już na serwerze się bedzie działo
-
-            # tworze tabele z samymi akcesoriami i wszystkie dodaje do tabeli
-            df_akcesoria = pd.DataFrame()
-            df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('GSM')])
-            df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('Ory')])
-            df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('Akc')])
-            df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('KAT')])
-            print("Ilość akcesorii: ", df_akcesoria['ilosc'].astype(int).sum())
-
-            df_akc = df_akcesoria[['symbol', 'nazwa', 'ilosc']]
-            #df_akc['ilosc'] = df_akc['ilosc'].astype(str).astype(int)
-
-            # przygotowuje do zapisu do bazy
-            user = settings.DATABASES['default']['USER']
-            password = settings.DATABASES['default']['PASSWORD']
-            db_name = settings.DATABASES['default']['NAME']
-
-            db_url = 'postgresql://{user}:{password}@localhost:5432/{db_name}'.format(
-                user=user,
-                password=password,
-                db_name=db_name,
-            )
-
-            engine = create_engine(db_url, echo=False)
-
-            df_akc.reset_index(drop=True, inplace=True)
-            df_akc['id'] = df_akc.index
-            df_akc.set_index('id')
-
-            df_akc['nazwa'] = df_akc['nazwa'].map(lambda x: x.replace('\n', ''))
-            # usuwamy spacje i duze litery aby przygotowac string do wyszukiwania
-            df_akc['searchstring'] = df_akc['nazwa'].map(lambda x: x.lower())
-            df_akc['searchstring'] = df_akc['searchstring'].map(lambda x: x.replace(' ', ''))
-
-            df_akc.to_sql(StanAkcesoria._meta.db_table, con=engine, if_exists='replace')
-
-
-            # tworze tabele prepaid i dodaje wszystko do tabeli
-            # usuwam startery mnp
-            df_prepaid_voice = pd.DataFrame()
-            df_prepaid_net = pd.DataFrame()
-            df_prepaid_voice = df_prepaid_voice.append(df[df.symbol.str.startswith('ST')])
-            df_prepaid_voice.drop(df_prepaid_voice[df_prepaid_voice['symbol'] == 'ST-P4-DALAS-MNP-MS'].index, inplace=True)
-            df_prepaid_voice.drop(df_prepaid_voice[df_prepaid_voice.symbol.str.startswith('ST-P4-INT')].index, inplace=True)
-            df_prepaid_net = df_prepaid_net.append(df[df.symbol.str.startswith('ST-P4-INT')])
-            print(df_prepaid_voice)
-            print(df_prepaid_net)
-
-            #print("Ilość prepaid: ", df_prepaid['ilosc'].astype(int).sum())
-
-            # tworze tabele z urzadzeniami i wszystkie dodaje do tabeli
-            df_urzadzenia = pd.DataFrame()
-            df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('TE')])
-            df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('UZ')])
-            df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('ZE')])
-            df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('GA')])
-            print("Ilość urządzeń: ", df_urzadzenia['ilosc'].astype(int).sum())
-
-            # tworze tabele ze zdrapkami
-            df_zdrapki = pd.DataFrame()
-            df_zdrapki = df_zdrapki.append(df[df.symbol.str.startswith('VO')])
-            print("Ilość zdrapek: ",df_zdrapki['ilosc'].astype(int).sum())
-
+        processed_file = file_processing(filename)
+        if processed_file:
             raport = Raport(
                 kto = request.user,
-                telefony_elza = df_urzadzenia['ilosc'].astype(int).sum(),
-                voice_elza = df_prepaid_voice['ilosc'].astype(int).sum(),
-                data_elza = df_prepaid_net['ilosc'].astype(int).sum(),
-                zdrapki_elza = df_zdrapki['ilosc'].astype(int).sum()
+                telefony_elza = processed_file['telefony_elza'],
+                voice_elza = processed_file['voice_elza'],
+                data_elza = processed_file['data_elza'],
+                zdrapki_elza = processed_file['zdrapki_elza']
             )
-
             raport.save()
-
             return redirect("inwentaryzacja:inwentaryzacja-update", pk=raport.id)
+        return render(request, 'magazyn/upload_file.html', {
+            'error': "Coś poszło nie tak"
+        })
 
-        except:
-            print("Coś poszło nie tak")
-            return render(request, 'magazyn/simple_upload.html', {
-                'error': "Coś poszło nie tak"
-            })
-        # return render(request, 'magazyn/simple_upload.html', {
-        #     'zdrapki': df_zdrapki['ilosc'].astype(int).sum(),
-        #     'urzadzenia': df_urzadzenia['ilosc'].astype(int).sum(),
-        #     'prepaid_net': df_prepaid_net['ilosc'].astype(int).sum(),
-        #     'prepaid_voice': df_prepaid_voice['ilosc'].astype(int).sum()
-        # })
-    #return reverse("inwentaryzacja:inwentaryzacja-lista")
-    return render(request, 'magazyn/simple_upload.html')
+
+    return render(request, 'magazyn/upload_file.html')
+
+@login_required
+def upload_file_to_magazyn(request):
+    template_name = 'upload_file.html'
+
+    if request.method == "POST" and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+
+        processed_file = file_processing(filename)
+        if processed_file:
+            return redirect("magazyn:lista-akcesorii")
+        return render(request, 'magazyn/upload_file.html', {
+            'error': "Coś poszło nie tak"
+        })
+
+
+    return render(request, 'magazyn/upload_file.html')
