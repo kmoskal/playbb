@@ -9,6 +9,7 @@
     <table cellspacing="0" class="table table-bordered table-striped table-dark mt-5 frame text-center">
       <thead>
         <th>Model</th>
+        <th>Cena</th>
         <th>Ilość</th>
       </thead>
       <tbody>
@@ -16,6 +17,7 @@
           {% for akces in akcesoria %}
             <tr>
               <td>{{akces.nazwa}}</td>
+              <td>{{akces.cena}}zł</td>
               <td>{{akces.ilosc}}</td>
             </tr>
           {% endfor %}
