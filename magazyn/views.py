@@ -35,16 +35,16 @@ def file_processing(filename):
     try:
         tables = camelot.read_pdf(settings.MEDIA_ROOT+filename, pages='1-end')
         df = pd.DataFrame()
-        print('1')
         for i in range(tables.n):
             df_temp = tables[i].df
             df_temp.drop(df_temp.index[0], inplace=True)
             df = df.append(df_temp)
-        print('2')
+
         # dodaje nazwy kolumn i resetuje index
+        df.dropna(inplace=True)
         df.columns = ['symbol', 'nazwa', 'cena', 'ilosc']
         df.reset_index(drop=True, inplace=True)
-        print('3')
+
         # tworze tabele z samymi akcesoriami i wszystkie dodaje do tabeli
         df_akcesoria = pd.DataFrame()
         df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('GSM')])
@@ -54,7 +54,7 @@ def file_processing(filename):
         df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('OEM')])
         df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('AKK')])
         df_akcesoria = df_akcesoria.append(df[df.symbol.str.startswith('T00')])
-        print('4')
+
         # tworze tabele prepaid i dodaje wszystko do tabeli
         # usuwam startery mnp
         df_prepaid_voice = pd.DataFrame()
@@ -63,7 +63,7 @@ def file_processing(filename):
         df_prepaid_voice.drop(df_prepaid_voice[df_prepaid_voice['symbol'] == 'ST-P4-DALAS-MNP-MS'].index, inplace=True)
         df_prepaid_voice.drop(df_prepaid_voice[df_prepaid_voice.symbol.str.startswith('ST-P4-INT')].index, inplace=True)
         df_prepaid_net = df_prepaid_net.append(df[df.symbol.str.startswith('ST-P4-INT')])
-        print('5')
+
         # tworze tabele z urzadzeniami i wszystkie dodaje do tabeli
         df_urzadzenia = pd.DataFrame()
         df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('TE')])
@@ -72,16 +72,16 @@ def file_processing(filename):
         df_urzadzenia = df_urzadzenia.append(df[df.symbol.str.startswith('GA')])
         # na koniec usuwam wszystkie telefony DEMO
         df_urzadzenia.drop(df_urzadzenia[df_urzadzenia.nazwa.str.contains('DEMO')].index, inplace=True)
-        print('6')
+
         # tworze tabele ze zdrapkami
         df_zdrapki = pd.DataFrame()
         df_zdrapki = df_zdrapki.append(df[df.symbol.str.startswith('VO')])
-        print('7')
+
         # przygotowuje do zapisu do bazy
         user = settings.DATABASES['default']['USER']
         password = settings.DATABASES['default']['PASSWORD']
         db_name = settings.DATABASES['default']['NAME']
-        print('8')
+
         db_url = 'postgresql://{user}:{password}@localhost:5432/{db_name}'.format(
             user=user,
             password=password,
@@ -90,7 +90,6 @@ def file_processing(filename):
 
         engine = create_engine(db_url, echo=False)
 
-        print('działa')
 
         #print('przygotowuje dane statu magazynowego')
         df_to_sql = pd.DataFrame()
@@ -104,10 +103,10 @@ def file_processing(filename):
         df_to_sql.reset_index(drop=True, inplace=True)
         df_to_sql.index.rename('id', inplace=True)
 
-        print('jescze dziala')
+
         #zapisuje do bazy danych
         df_to_sql.to_sql(StanAkcesoria._meta.db_table, con=engine, if_exists='replace')
-        print('hmmm')
+
         raport = {
             "telefony_elza": df_urzadzenia['ilosc'].astype(int).sum(),
             "voice_elza": df_prepaid_voice['ilosc'].astype(int).sum(),
