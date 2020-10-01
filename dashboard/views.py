@@ -40,13 +40,15 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 return "Brak danych"
 
         qs = Raport.objects.last()
-        context['telefony'] = check_difference(qs.telefony_elza, qs.telefony_stan)
-        context['voice'] = check_difference(qs.voice_elza, qs.voice_stan)
-        context['starter_data'] = check_difference(qs.data_elza, qs.data_stan)
-        context['zdrapki'] = check_difference(qs.zdrapki_elza, qs.zdrapki_stan)
-        context['doladowania'] = check_difference(qs.doladowania_elza, qs.doladowania_stan)
-        context['gotowka'] = check_difference(qs.kasa_elza, qs.kasa_stan)
-        context['data'] = qs.data_raportu
-
+        if qs:
+            context['telefony'] = check_difference(qs.telefony_elza, qs.telefony_stan)
+            context['voice'] = check_difference(qs.voice_elza, qs.voice_stan)
+            context['starter_data'] = check_difference(qs.data_elza, qs.data_stan)
+            context['zdrapki'] = check_difference(qs.zdrapki_elza, qs.zdrapki_stan)
+            context['doladowania'] = check_difference(qs.doladowania_elza, qs.doladowania_stan)
+            context['gotowka'] = check_difference(qs.kasa_elza, qs.kasa_stan)
+            context['data'] = qs.data_raportu
+            context['uzyczenie'] = qs.uzyczenie_elza
+            context['folie'] = qs.folia_elza
 
         return context

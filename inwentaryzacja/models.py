@@ -19,7 +19,8 @@ class Raport(models.Model):
     doladowania_stan = models.IntegerField(blank=True, null=True)
     kasa_elza = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
     kasa_stan = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-
+    uzyczenie_elza = models.IntegerField(blank=True, null=True)
+    folia_elza = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return str(self.kto)

@@ -48,7 +48,7 @@ class RaportUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("inwentaryzacja:inwentaryzacja-lista")
+        return reverse("dashboard:dashboard-home")
 
 class RaportListView(LoginRequiredMixin, ListView):
     login_url ='accounts:account-login'

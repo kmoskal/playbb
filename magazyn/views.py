@@ -77,6 +77,12 @@ def file_processing(filename):
         df_zdrapki = pd.DataFrame()
         df_zdrapki = df_zdrapki.append(df[df.symbol.str.startswith('VO')])
 
+        # tworze tabele ze sprzetem na uzyczenie i foliami clearplex
+        df_uzyczenie = pd.DataFrame()
+        df_uzyczenie = df[df.symbol.str.startswith('UZ')]
+        df_folie = pd.DataFrame()
+        df_folie = df[df.nazwa.str.contains('Clearplex', case=False)]
+
         # przygotowuje do zapisu do bazy
         user = settings.DATABASES['default']['USER']
         password = settings.DATABASES['default']['PASSWORD']
@@ -111,7 +117,9 @@ def file_processing(filename):
             "telefony_elza": df_urzadzenia['ilosc'].astype(int).sum(),
             "voice_elza": df_prepaid_voice['ilosc'].astype(int).sum(),
             "data_elza": df_prepaid_net['ilosc'].astype(int).sum(),
-            "zdrapki_elza": df_zdrapki['ilosc'].astype(int).sum()
+            "zdrapki_elza": df_zdrapki['ilosc'].astype(int).sum(),
+            "uzyczenie_elza": df_uzyczenie['ilosc'].astype(int).sum(),
+            "folia_elza": df_folie['ilosc'].astype(int).sum()
         }
 
         return raport
@@ -135,7 +143,9 @@ def upload_file_to_raport(request):
                 telefony_elza = processed_file['telefony_elza'],
                 voice_elza = processed_file['voice_elza'],
                 data_elza = processed_file['data_elza'],
-                zdrapki_elza = processed_file['zdrapki_elza']
+                zdrapki_elza = processed_file['zdrapki_elza'],
+                uzyczenie_elza = processed_file['uzyczenie_elza'],
+                folia_elza = processed_file['folia_elza']
             )
             raport.save()
             return redirect("inwentaryzacja:inwentaryzacja-update", pk=raport.id)
