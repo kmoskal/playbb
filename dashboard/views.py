@@ -50,5 +50,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             context['data'] = qs.data_raportu
             context['uzyczenie'] = qs.uzyczenie_elza
             context['folie'] = qs.folia_elza
+            context['raport_id'] = qs.id
 
         return context
