@@ -17,7 +17,8 @@ import json
 class AkcesoriaListView(LoginRequiredMixin, ListView):
     login_url = 'accounts:account-login'
     this_month = datetime.datetime.now().month
-    queryset = Akcesoria.objects.filter(data__month=this_month).order_by('-data', '-pk')
+    this_year = datetime.datetime.now().year
+    queryset = Akcesoria.objects.filter(data__month=this_month, data__year=this_year).order_by('-data', '-pk')
     model = Akcesoria
     context_object_name = 'akcesoria'
 
@@ -33,7 +34,8 @@ class AkcesoriaCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         this_month = datetime.datetime.now().month
-        context["akcesoria"] = self.model.objects.filter(data__month=this_month).order_by('-data', '-pk')
+        this_year = datetime.datetime.now().year
+        context["akcesoria"] = self.model.objects.filter(data__month=this_month, data__year=this_year).order_by('-data', '-pk')
         return context
 
 class AkcesoriaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

@@ -19,7 +19,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         # context do akcesorii
         this_month = datetime.datetime.now().month
-        queryset = Akcesoria.objects.filter(data__month=this_month)
+        this_year = datetime.datetime.now().year
+        queryset = Akcesoria.objects.filter(data__month=this_month, data__year=this_year)
         df = read_frame(queryset)
         kto_grp = df.groupby(['kto'])
         wartosc = kto_grp['kwota'].sum()
