@@ -52,46 +52,24 @@ class RaportUpdateView(LoginRequiredMixin, UpdateView):
 
 class RaportListView(LoginRequiredMixin, ListView):
     login_url ='accounts:account-login'
+    this_year = datetime.datetime.now().year
     this_month = datetime.datetime.now().month
     dzis = datetime.datetime.now().today
-    queryset = Raport.objects.filter(data_raportu__month=this_month)
+    queryset = Raport.objects.filter(data_raportu__month=this_month, data_raportu__year=this_year)
     model = Raport
     context_object_name = 'raporty'
     ordering = ['-data_raportu', '-pk']
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(RaportListView, self).get_context_data(**kwargs)
-    #     this_month = datetime.datetime.now().month
-    #     dzis = datetime.datetime.now().today
-    #     queryset = Raport.objects.filter(data_raportu__month=this_month)
-    #     ordering = ['-data_raportu']
-    #     context['qs'] = queryset
-    #     context['data'] = self.dzis
-    #     return context
-
 class RaportLastListView(LoginRequiredMixin, ListView):
     login_url = 'accounts:account-login'
     template_name = 'inwentaryzacja/raport_last_list.html'
-    #this_month = datetime.datetime.now().month
-    #queryset = Raport.objects.filter(data_raportu__month=this_month).last()
     model = Raport
     context_object_name = 'raporty'
     queryset = Raport.objects.all().last()
 
-
-
-
-
-
 class RaportDetailView(LoginRequiredMixin, DetailView):
     login_url='accounts:account-login'
     model = Raport
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     dzis = datetime.datetime.now().today()
-    #     context['dzis'] = dzis
-    #     return context
-    #<td><a href="{% url 'inwentaryzacja:inwentaryzacja-update' pk=raport.id %}"><i class="fas fa-edit"></i></a></td>
 
     def get_context_data(self, **kwargs):
         context = super(RaportDetailView, self).get_context_data(**kwargs)
@@ -99,7 +77,7 @@ class RaportDetailView(LoginRequiredMixin, DetailView):
 
 
         def check_difference(x, y):
-            if x and y:
+            if x is not None and y is not None:
                 if y-x > 0:
                     return y-x
                 elif y-x < 0:
@@ -117,5 +95,7 @@ class RaportDetailView(LoginRequiredMixin, DetailView):
         context['doladowania'] = check_difference(qs.doladowania_elza, qs.doladowania_stan)
         context['gotowka'] = check_difference(qs.kasa_elza, qs.kasa_stan)
         context['data'] = qs.data_raportu
+        context['uzyczenie'] = qs.uzyczenie_elza
+        context['folie'] = qs.folia_elza
 
         return context

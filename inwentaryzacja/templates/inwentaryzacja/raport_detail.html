@@ -71,6 +71,8 @@
           <li class="list-group-item"><b>Zdrapki:</b> <span {% if zdrapki == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ zdrapki }}</span></>
           <li class="list-group-item"><b>Doładowania:</b> <span {% if doladowania == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ doladowania }}</span></>
           <li class="list-group-item"><b>Gotówka:</b> <span {% if gotowka == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{% if gotowka == 'OK' %} {{ gotowka }} {% else %} {{ gotowka}} zł {% endif %}</span></li>
+          <li class="list-group-item"><b>Użyczenie:</b> <span class="float-right">{{ uzyczenie }}</span></li>
+          <li class="list-group-item"><b>Folie:</b> <span class="float-right">{{ folie }}</span></li>
         </ul>
         <div class="card-footer">
 
