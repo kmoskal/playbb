@@ -1,17 +1,11 @@
-from django.shortcuts import render, redirect
-from django.http import Http404
-from django.views.generic import (
-        TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
-    )
-from django.urls import reverse
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.mixins import LoginRequiredMixin
 import datetime
-
+from django.views.generic import (
+        CreateView, ListView, DetailView, UpdateView
+)
+from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Raport
 
-class RaportView(LoginRequiredMixin, TemplateView):
-    pass
 
 class RaportCreateView(LoginRequiredMixin, CreateView):
     login_url = 'accounts:account-login'
@@ -50,8 +44,9 @@ class RaportUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse("dashboard:dashboard-home")
 
+
 class RaportListView(LoginRequiredMixin, ListView):
-    login_url ='accounts:account-login'
+    login_url = 'accounts:account-login'
     this_year = datetime.datetime.now().year
     this_month = datetime.datetime.now().month
     dzis = datetime.datetime.now().today
@@ -60,6 +55,7 @@ class RaportListView(LoginRequiredMixin, ListView):
     context_object_name = 'raporty'
     ordering = ['-data_raportu', '-pk']
 
+
 class RaportLastListView(LoginRequiredMixin, ListView):
     login_url = 'accounts:account-login'
     template_name = 'inwentaryzacja/raport_last_list.html'
@@ -67,14 +63,14 @@ class RaportLastListView(LoginRequiredMixin, ListView):
     context_object_name = 'raporty'
     queryset = Raport.objects.all().last()
 
+
 class RaportDetailView(LoginRequiredMixin, DetailView):
-    login_url='accounts:account-login'
+    login_url = 'accounts:account-login'
     model = Raport
 
     def get_context_data(self, **kwargs):
         context = super(RaportDetailView, self).get_context_data(**kwargs)
         context['raport'] = Raport.objects.get(pk=self.kwargs['pk'])
-
 
         def check_difference(x, y):
             if x is not None and y is not None:

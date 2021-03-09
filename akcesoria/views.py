@@ -1,17 +1,12 @@
+import datetime
 from django.views.generic import TemplateView
 from django.views.generic import (
         CreateView, ListView, DetailView, UpdateView, DeleteView
     )
 from django.urls import reverse
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core import serializers
-import datetime
-import pandas as pd
 from django_pandas.io import read_frame
 from .models import Akcesoria
-import json
-
 
 
 class AkcesoriaListView(LoginRequiredMixin, ListView):
@@ -21,6 +16,7 @@ class AkcesoriaListView(LoginRequiredMixin, ListView):
     queryset = Akcesoria.objects.filter(data__month=this_month, data__year=this_year).order_by('-data', '-pk')
     model = Akcesoria
     context_object_name = 'akcesoria'
+
 
 class AkcesoriaCreateView(LoginRequiredMixin, CreateView):
     login_url = 'accounts:account-login'
@@ -37,6 +33,7 @@ class AkcesoriaCreateView(LoginRequiredMixin, CreateView):
         this_year = datetime.datetime.now().year
         context["akcesoria"] = self.model.objects.filter(data__month=this_month, data__year=this_year).order_by('-data', '-pk')
         return context
+
 
 class AkcesoriaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     login_url = 'accounts:account-login'
@@ -67,7 +64,6 @@ class AkcesoriaDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     login_url = 'accounts:account-login'
     model = Akcesoria
 
-
     def test_func(self):
         obj = self.get_object()
         if self.request.user == obj.kto:
@@ -81,8 +77,6 @@ class AkcesoriaDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class AkcesoriaMonthView(LoginRequiredMixin, TemplateView):
     login_url = 'accounts:account-login'
     template_name = 'akcesoria/akcesoria_month.html'
-
-
 
     def get_context_data(self, **kwargs):
         year = self.kwargs.get('year')

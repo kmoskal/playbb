@@ -23,5 +23,6 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('akcesoria/', include('akcesoria.urls')),
     path('inwentaryzacja/', include('inwentaryzacja.urls')),
-    path('magazyn/', include('magazyn.urls'))
+    path('magazyn/', include('magazyn.urls')),
+    # path('braki/', include('braki.urls'))
 ]

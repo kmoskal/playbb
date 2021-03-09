@@ -1,18 +1,14 @@
+import datetime
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-import datetime
-import pandas as pd
 from django_pandas.io import read_frame
 from akcesoria.models import Akcesoria
 from inwentaryzacja.models import Raport
 
 
-
 class DashboardView(LoginRequiredMixin, TemplateView):
     login_url = 'accounts:account-login'
     template_name = 'dashboard/dashboard_home.html'
-
-
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)

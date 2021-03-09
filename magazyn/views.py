@@ -10,12 +10,14 @@ import pandas as pd
 from .models import StanAkcesoria
 from inwentaryzacja.models import Raport
 
+
 class ListaAkcesoriView(LoginRequiredMixin, ListView):
     login_url = 'accounts:account-login'
     queryset = StanAkcesoria.objects.all()
     template_name = "magazyn/lista-akcesorii.html"
     model = StanAkcesoria
     context_object_name = 'akcesoria'
+
 
 class WyszukaneAkcesoriaView(LoginRequiredMixin, ListView):
     login_url = 'accounts:account-login'
@@ -96,8 +98,7 @@ def file_processing(filename):
 
         engine = create_engine(db_url, echo=False)
 
-
-        #print('przygotowuje dane statu magazynowego')
+        # print('przygotowuje dane statu magazynowego')
         df_to_sql = pd.DataFrame()
         df_to_sql = df_to_sql.append(df_akcesoria)
         df_to_sql = df_to_sql.append(df_urzadzenia)
@@ -109,8 +110,7 @@ def file_processing(filename):
         df_to_sql.reset_index(drop=True, inplace=True)
         df_to_sql.index.rename('id', inplace=True)
 
-
-        #zapisuje do bazy danych
+        # zapisuje do bazy danych
         df_to_sql.to_sql(StanAkcesoria._meta.db_table, con=engine, if_exists='replace')
 
         raport = {
@@ -124,8 +124,9 @@ def file_processing(filename):
 
         return raport
 
-    except:
-        return None
+    except Exception:
+        pass
+
 
 @login_required
 def upload_file_to_raport(request):
@@ -133,28 +134,32 @@ def upload_file_to_raport(request):
 
     if request.method == "POST" and request.FILES['myfile']:
         myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-
-        processed_file = file_processing(filename)
-        if processed_file:
-            raport = Raport(
-                kto = request.user,
-                telefony_elza = processed_file['telefony_elza'],
-                voice_elza = processed_file['voice_elza'],
-                data_elza = processed_file['data_elza'],
-                zdrapki_elza = processed_file['zdrapki_elza'],
-                uzyczenie_elza = processed_file['uzyczenie_elza'],
-                folia_elza = processed_file['folia_elza']
-            )
-            raport.save()
-            return redirect("inwentaryzacja:inwentaryzacja-update", pk=raport.id)
-        return render(request, 'magazyn/upload_file.html', {
-            'error': "Coś poszło nie tak"
-        })
-
-
+        myfile_name = str(myfile)
+        if myfile_name[-4:] == '.pdf':
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            processed_file = file_processing(filename)
+            if processed_file:
+                raport = Raport(
+                    kto=request.user,
+                    telefony_elza=processed_file['telefony_elza'],
+                    voice_elza=processed_file['voice_elza'],
+                    data_elza=processed_file['data_elza'],
+                    zdrapki_elza=processed_file['zdrapki_elza'],
+                    uzyczenie_elza=processed_file['uzyczenie_elza'],
+                    folia_elza=processed_file['folia_elza']
+                )
+                raport.save()
+                return redirect("inwentaryzacja:inwentaryzacja-update", pk=raport.id)
+            return render(request, 'magazyn/upload_file.html', {
+                'error': "Coś poszło nie tak"
+            })
+        else:
+            return render(request, 'magazyn/upload_file.html', {
+                'error': "Plik musi posiadać rozszerzenie 'pdf'"
+            })
     return render(request, 'magazyn/upload_file.html')
+
 
 @login_required
 def upload_file_to_magazyn(request):
@@ -162,15 +167,18 @@ def upload_file_to_magazyn(request):
 
     if request.method == "POST" and request.FILES['myfile']:
         myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-
-        processed_file = file_processing(filename)
-        if processed_file:
-            return redirect("magazyn:lista-akcesorii")
-        return render(request, 'magazyn/upload_file.html', {
-            'error': "Coś poszło nie tak"
-        })
-
-
+        myfile_name = str(myfile)
+        if myfile_name[-4:] == '.pdf':
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            processed_file = file_processing(filename)
+            if processed_file:
+                return redirect("magazyn:lista-akcesorii")
+            return render(request, 'magazyn/upload_file.html', {
+                'error': "Coś poszło nie tak"
+            })
+        else:
+            return render(request, 'magazyn/upload_file.html', {
+                'error': "Plik musi posiadać rozszerzenie 'pdf'"
+            })
     return render(request, 'magazyn/upload_file.html')

@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 # Create your models here.
 
+
 class Raport(models.Model):
     data_raportu = models.DateField(auto_now_add=True)
     kto = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=User)
