@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %} Inwentaryzacja {% endblock %}
+{% block content %}
+  <table class="table table-bordered table-striped table-dark mt-5 frame text-center">
+    <thead>
+      <tr>
+        <th scope="col">Sporządził</th>
+        <th scope="col">Data</th>
+        <th scope="col" colspan="2">Telefony</th>
+        <th scope="col" colspan="2">Startery Voice</th>
+        <th scope="col" colspan="2">Startery Data</th>
+        <th scope="col" colspan="2">Zdrapki</th>
+        <th scope="col" colspan="2">Doładowania</th>
+        <th scope="col" colspan="2">Gotówka</th>
+        <th scope="col">Edytuj</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2"></td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td>Elza</td>
+        <td>Stan</td>
+        <td></td>
+      </tr>
+        <tr>
+          <td>{{ raport.kto }}</td>
+          <td>{{ raport.data_raportu|date:"d-m-Y" }}</td>
+          <td>{{ raport.telefony_elza }}</td>
+          <td>{{ raport.telefony_stan }}</td>
+          <td>{{ raport.voice_elza }}</td>
+          <td>{{ raport.voice_stan }}</td>
+          <td>{{ raport.data_elza }}</td>
+          <td>{{ raport.data_stan }}</td>
+          <td>{{ raport.zdrapki_elza }}</td>
+          <td>{{ raport.zdrapki_stan }}</td>
+          <td>{{ raport.doladowania_elza }}</td>
+          <td>{{ raport.doladowania_stan }}</td>
+          <td>{{ raport.kasa_elza }}</td>
+          <td>{{ raport.kasa_stan }}</td>
+          <td><a href="{% url 'inwentaryzacja:inwentaryzacja-update' pk=raport.id %}"><i class="fas fa-edit"></i></a></td>
+        </tr>
+    </tbody>
+  </table>
+
+  <div class="row mt-4">
+
+    <div class="col-4">
+
+    </div>
+
+
+    <div class="col-4">
+      <div class="card mt-3 p-0 frame">
+        <div class="card-header">
+          <span style="font-size: 18px; font-weight: 800">Inwentaryzacja:</span><span style="font-size: 18px; font-weight: 800" class="float-right">{{ data|date:"d-M-Y" }}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><b>Telefony:</b> <span {% if telefony == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ telefony }}</span></li>
+          <li class="list-group-item"><b>Startery Voice:</b> <span {% if voice == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ voice }}</span></li>
+          <li class="list-group-item"><b>Startery Data:</b> <span {% if starter_data == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ starter_data }}</span></li>
+          <li class="list-group-item"><b>Zdrapki:</b> <span {% if zdrapki == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ zdrapki }}</span></>
+          <li class="list-group-item"><b>Doładowania:</b> <span {% if doladowania == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{{ doladowania }}</span></>
+          <li class="list-group-item"><b>Gotówka:</b> <span {% if gotowka == 'OK' %} class="float-right" {% else %} class="float-right brak" {% endif %}>{% if gotowka == 'OK' %} {{ gotowka }} {% else %} {{ gotowka}} zł {% endif %}</span></li>
+          <li class="list-group-item"><b>Użyczenie:</b> <span class="float-right">{{ uzyczenie }}</span></li>
+          <li class="list-group-item"><b>Folie:</b> <span class="float-right">{{ folie }}</span></li>
+        </ul>
+        <div class="card-footer">
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

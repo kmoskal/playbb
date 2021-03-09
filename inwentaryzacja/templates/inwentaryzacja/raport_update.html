@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Inwentaryzacja {% endblock %}
+{% block styl %}{% endblock %}
+{% block content %}
+    <table cellspacing="0" class="table table-bordered table-striped table-dark mt-5 frame text-center">
+      <thead>
+        <tr>
+          <th colspan="2">Telefony</th>
+          <th colspan="2">Startery Voice</th>
+          <th colspan="2">Startery Data</th>
+          <th colspan="2">Zdrapki</th>
+          <th colspan="2">Doładowania</th>
+          <th colspan="2">Gotówka</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+            <td>Elza</td>
+            <td>Stan</td>
+            <td>Elza</td>
+            <td>Stan</td>
+            <td>Elza</td>
+            <td>Stan</td>
+            <td>Elza</td>
+            <td>Stan</td>
+            <td>Elza</td>
+            <td>Stan</td>
+            <td>Elza</td>
+            <td>Stan</td>
+        </tr>
+        <form method="post">
+        {% csrf_token %}
+            <tr>
+                {% for element in form %}
+                  <td>{{ element }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+              <td colspan="12">
+                <button type="submit" class="btn btn-outline-light w-100"><i class="fas fa-save"></i> Zapisz</button>
+              </td>
+            </tr>
+        </form>
+      </tbody>
+    </table>
+{% endblock %}

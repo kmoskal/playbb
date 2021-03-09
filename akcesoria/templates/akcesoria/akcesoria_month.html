@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Akcesoria {% endblock %}
+{% block styl %}{% endblock %}
+{% block content %}
+
+  <div class="row justify-content-md-center">
+    <div class="col-4">
+      <table cellspacing="0" class="table table-bordered table-striped table-dark frame text-center">
+        <thead>
+          <tr>
+            <th>Miesiąc</th>
+            <th>Rok</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <select id="months" onchange="saveValue(this);" name="">
+                <option value="1">Styczeń</option>
+                <option value="2">Luty</option>
+                <option value="3">Marzec</option>
+                <option value="4">Kwiecień</option>
+                <option value="5">Maj</option>
+                <option value="6">Czerwiec</option>
+                <option value="7">Lipiec</option>
+                <option value="8">Sierpień</option>
+                <option value="9">Wrzesień</option>
+                <option value="10">Październik</option>
+                <option value="11">Listopad</option>
+                <option value="12">Grudzień</option>
+              </select>
+            </td>
+            <td>
+              <select id="years" onchange="saveValue(this);" name="">
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><a role="button" class="btn btn-outline-light w-100 akcesoria-search" id="link" onclick="showMonth()" href="#"><i class="fas fa-search"></i></a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+{% if suma %}
+  <div class="row justify-content-md-center">
+    <div class="col-4">
+      <div class="card mt-5 p-0 frame">
+        <div class="card-header">
+          <span style="font-size: 18px; font-weight: 800">Akcesoria: {{ data.miesiac }}-{{ data.rok }}</span><span class="float-right" style="font-size: 18px; font-weight: 800">{{ suma }} zł</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for key, value in akcesoria.items %}
+            <li class="list-group-item"><b>{{ key }}:</b> <span id="span-{{ forloop.counter }}" class="float-right">{{ value }} zł</span></li>
+          {% endfor %}
+        </ul>
+        <div class="card-header">
+          <span style="font-size: 18px; font-weight: 800">Kwota do podziału:</span><span style="display: inline-block; width:30%; float:right;"><input id="kwota-do-podzialu" type="number" name="" value=""></span>
+        </div>
+        <div class="card-header text-center">
+          <button class="btn btn-outline-light w-100" type="button" onclick="obliczPremie()" name="button">Przelicz</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+{% else %}
+  <h6 class="text-center">Brak wyników</h6>
+{% endif %}
+
+
+
+  <script>
+    let yearSelect = document.getElementById('years');
+    let monthSelect = document.getElementById('months');
+    const link = document.getElementById('link');
+
+    let dj_data = {{ akcesoria_json|safe }};
+    const dj_suma = {{ suma|safe }};
+
+
+    function obliczPremie(e){
+      const premia = document.getElementById('kwota-do-podzialu').value;
+      let suma = 0;
+      let spanId = 1;
+
+      for(let i in dj_data){
+        dj_data[i] = (dj_data[i]*100/dj_suma).toFixed(2);
+        dj_data[i] = (premia/100*dj_data[i]).toFixed(2);
+        suma = suma + parseFloat(dj_data[i]);
+        var a = document.getElementById('span-'+spanId);
+        a.textContent = (dj_data[i]).replace('.', ',') + " zł";
+        spanId++;
+      }
+      console.log(suma);
+      if (premia<suma) {
+        alert("Obliczona kwota do podziału jest wyższa i wynosi " +(suma)+ " zł");
+      }
+    }
+
+
+
+    function saveValue(e){
+      var id = e.id;
+      var val = e.value;
+      localStorage.setItem(id, val);
+    }
+
+
+    function getSavedValue(v){
+      if ( localStorage.getItem(v) ){
+          return localStorage.getItem(v);
+      }
+    }
+
+    yearSelect.value = getSavedValue('years')
+    monthSelect.value = getSavedValue('months')
+
+    function showMonth(){
+      const updatedLink = `/akcesoria/podsumowanie/${yearSelect.value}/${monthSelect.value}`;
+      link.href = updatedLink;
+    }
+
+  </script>
+
+{% endblock %}

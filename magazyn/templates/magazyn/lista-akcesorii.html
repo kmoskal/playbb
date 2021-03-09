@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block title %} Lista akcesorii {% endblock %}
+{% block content %}
+<div class="row justify-content-md-center">
+  <div class="col-9">
+    <table cellspacing="0" class="table table-bordered table-striped table-dark mt-5 frame text-center">
+      <thead>
+        <th>Model</th>
+        <th>Cena</th>
+        <th>Ilość</th>
+      </thead>
+      <tbody>
+        {% if akcesoria %}
+          {% for akces in akcesoria %}
+            <tr>
+              <td>{{akces.nazwa}}</td>
+              <td>{{akces.cena}}zł</td>
+              <td>{{akces.ilosc}}</td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

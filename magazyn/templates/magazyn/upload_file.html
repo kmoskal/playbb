@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block title %} Magazyn {% endblock %}
+{% block styl %}{% endblock %}
+{% block content %}
+<div class="row justify-content-md-center">
+  <div class="col-6">
+    <table cellspacing="0" class="table table-bordered table-striped table-dark mt-5 frame text-center">
+      <tbody>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <tr>
+
+              <td colspan="4">
+                <input type="file" name="myfile">
+              </td>
+
+            <td colspan="4"><button class="btn-secondary" type="submit" name="">Upload</button></td>
+          </tr>
+
+
+        </form>
+
+        {% if error %}
+          <tr>
+            <p class="mt-2 text-center text-danger">{{ error }}</p>
+          </tr>
+        {% endif %}
+
+        {% if urzadzenia %}
+        <tr>
+          <td colspan="12">Ilość urządzeń: {{ urzadzenia }}</td>
+        </tr>
+        <tr>
+          <td colspan="12">Ilość prepaid voice: {{ prepaid_voice }}</td>
+        </tr>
+        <tr>
+          <td colspan="12">Ilość prepaid net: {{ prepaid_net }}</td>
+        </tr>
+        <tr>
+          <td colspan="12">Ilość zdrapek: {{ zdrapki }}</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

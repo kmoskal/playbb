@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table cellspacing="0" class="table table-bordered table-striped table-dark mt-5 w-25 frame text-center">
+  <thead>
+    <tr>
+      <th>Login</th>
+  </thead>
+  <tbody>
+    <form method="post" class="text-center">
+      {% csrf_token %}
+            <tr>
+              <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+              <th>Hasło</th>
+            </tr>
+            <tr>
+              <td>{{ form.password }}</td>
+            </tr>
+              <td colspan="12">
+                <button type="submit" class="btn btn-outline-light mx-auto w-100 montserrat"><i class="fas fa-sign-in-alt"></i> Login</button>
+              </td>
+
+              {% if form.errors %}
+                <tr>
+                  <td class="login-error">Nazwa użytkownika i hasło nie pasują. Spróbuj ponownie.</td>
+                </tr>
+              {% endif %}
+
+    </form>
+  </tbody>
+  {% endblock %}
